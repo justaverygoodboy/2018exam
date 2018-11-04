@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>某大佬微博的爬取测试</title>
+    <meta charset="utf-8">
+    <style></style>
+    <script src="https://cdn.bootcss.com/jquery/3.3.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="jquery-3.3.1.js"></script>
+</head>
+<body>
+<div>
+输入你想从大佬这里得到的xx：
+<input type="text" value="" id="search"/>
+<button id="confirm">确定</button>
+</div>
+
+<div>
+    <p>大佬有以下这些文章:</p>
+    <p id="show"></p>
+
+</div>
+
+<script>
+    //一个立即执行函数获取文章
+    (function getStuff(){
+        $.ajax({
+            url:'http://localhost:5000/getpara',
+            method:'GET',
+            success:function(res){
+                $("#show").append(res)
+            },
+            error:function(){
+                alert('error')
+            }
+        })
+
+        }
+    )();
+
+//用于搜索
+    function getResult(keyword){
+        $.ajax({
+            url:'http://localhost:5000/search',
+            contentType:'text',
+            method:'GET',
+            data:{
+                's':keyword
+            },
+            success:function(res){
+                //渲染
+            },
+            error:function(){
+                alert('error')
+            }
+        })
+    }
+
+    //用户操作
+    function getResultControl(){
+        var searchInput = $('#search')
+        getResult(searchInput.val())
+
+    }
+
+    $('#confirm').click(function () {
+        getResultControl()
+    })
+</script>
+
+</body>
+</html>

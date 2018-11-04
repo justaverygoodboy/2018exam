@@ -1,0 +1,162 @@
+<!doctype html>
+
+<head>
+
+  <title>index</title>
+  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+  <script src="./jquery-3.3.1.js"></script>
+  <style>
+      #submit{
+          padding: 16px 32px;
+          background-color:purple;
+          border:none;
+          color:white;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          -webkit-transition-duration: 0.4s;
+          transition-duration: 0.4s;
+          cursor: pointer;
+          background-color: purple;
+      ;
+      }
+      #submit:hover{background-color: #008CBA;
+          color: white;}
+      @keyframes bouncing-loader {
+          to {
+              opacity: 0.1;
+              transform: translate3d(0, -1rem, 0);
+          }
+      }
+      .bouncing-loader {
+          display: flex;
+          justify-content: center;
+      }
+      .bouncing-loader > div {
+          width: 1rem;
+          height: 1rem;
+          margin: 3rem 0.2rem;
+          background: #8385aa;
+          border-radius: 50%;
+          animation: bouncing-loader 0.6s infinite alternate;
+      }
+      .bouncing-loader > div:nth-child(2) {
+          animation-delay: 0.2s;
+      }
+      .bouncing-loader > div:nth-child(3) {
+          animation-delay: 0.4s;
+      }
+  </style>
+</head>
+
+<body>
+<div class="bouncing-loader">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+<div id="signin">
+    <form>
+        学号:<input id="username" type="text" value=""/>
+        密码:<input id="password" type="password" value=""/>
+    </form>
+    <button id="submit">submit</button>
+</div>
+<div id="pro">
+    <button id="getP">check to show</button>
+    <div id="imgplace">
+        <p><span><b>照片</b></span></p>
+    </div>
+
+    <div id="info">
+        <p><b>姓名</b><span id="name"></span></p>
+        <p><b>性别</b><span id="sex"></span></p>
+        <p><b>名族</b><span id="mingzu"></span></p>
+        <p><b>出生年月</b><span id="birth"></span></p>
+        <p><b>身份证号</b><span id="idcard"></span></p>
+        <p><b>学号</b><span id="scnum"></span></p>
+        <p><b>籍贯</b><span id="home"></span></p>
+        <p><b>学生类别</b><span id="kind"></span></p>
+        <p><b>国别</b><span id="nation"></span></p>
+        <p><b>培养方式</b><span id="fostert"></span></p>
+        <p><b>政治面貌</b><span id="pol"></span></p>
+        <p id="test"></p>
+    </div>
+</div>
+
+<script>
+    //用户登陆
+    function subUser(username,password){
+        $.ajax({
+            url:'https://os.ncuos.com/api/user/token',
+            contentType:'application/json;charset=utf-8',
+            method:'POST',
+            data:JSON.stringify({
+                username:username,
+                password:password
+            }),
+            success:function(res){
+                //登陆完后试着请求basic？
+                (function getP(){
+                    $.ajax({
+                        url:'https://os.ncuos.com/api/user/profile/basic',
+                        contentType:'application/json;charset=utf-8',
+                        method:'GET',
+                        success:function(res){
+                            var t=JSON.stringify(res)
+                            document.getElementById("test").innerHTML=t
+                        },
+                        error:function(){
+                            alert('error')
+                        }
+                    })
+                })//          WTFFFFFFF 401啊啊
+                alert(res.message)
+            },
+            error:function(){
+                alert('error')
+            }
+        })
+    }
+
+    //获取个人信息
+      function getP(){
+        $.ajax({
+            url:'https://os.ncuos.com/api/user/profile/basic',
+            contentType:'application/json;charset=utf-8',
+            method:'GET',
+            //here to solve? data:
+            success:function(res){
+                var t=JSON.stringify(res)
+                document.getElementById("test").innerHTML=t
+            },
+            error:function(){
+                alert('error')
+            }
+        })
+    }
+
+//用户操作
+    function subUserControl () {
+        var nameInput = $('#username')
+        var passInput = $('#password')
+        subUser(nameInput.val(), passInput.val())
+    }
+
+    function getPControl () {
+        getP()
+    }
+
+    $('#getP').click(function () {
+        getPControl()
+    })
+
+    $('#submit').click(function () {
+        subUserControl()
+    })
+</script>
+</body>
+</html>
+
